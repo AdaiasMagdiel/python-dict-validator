@@ -1,6 +1,7 @@
 from pylidator import Validator, Validations
 
 data = {'name': 'John Doe', 'email': 'invalid email.com', 'password': 'error'}
+
 rules = {
     'name': [Validations.MIN(6)],
     'email': [Validations.EMAIL],
