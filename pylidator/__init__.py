@@ -1,8 +1,11 @@
+import re
 from typing import Any
 
 
 class Validations:
     ALPHA = 'alpha'
+    ALPHA_NUMERIC = 'alpha_numeric'
+    ALPHA_NUMERIC_PUNCT = 'alpha_numeric_punct'
     EMAIL = 'email'
     REQUIRED = 'required'
 
@@ -32,6 +35,31 @@ class Rules:
     def alpha(self, key: str, value: str):
         item = self.data.get(key)
         return item and item.isalpha()
+
+    def alpha_numeric(self, key: str, value: str):
+        item = self.data.get(key)
+        if item is None:
+            return False
+
+        for char in item:
+            if not char.isalpha() and not char.isdigit():
+                return False
+
+        return True
+
+    def alpha_numeric_punct(self, key: str, value: str):
+        item = self.data.get(key)
+        puncts = '~ ! # $ % & * - _ + = | : .'.split()
+
+        if item is None:
+            return False
+
+        for char in item:
+            if not char.isalpha() and not char.isdigit(
+            ) and char not in puncts:
+                return False
+
+        return True
 
     def email(self, key: str, value: str):
         item = self.data.get(key)
@@ -69,6 +97,9 @@ class Rules:
 class Messages:
     messages = {
         'alpha': 'The "{}" must have only alphabetic characters',
+        'alpha_numeric': 'The "{}" must contains only alphanumeric characters',
+        'alpha_numeric_punct':
+        'The "{}" must contains only alphanumeric, space, or this characters: ~, !, #, $, %, &, *, -, _, +, =, |, :, ..',  # noqa
         'email': 'The "{}" must be a valid email',
         'max': 'The "{}" must have a {} max length',
         'min': 'The "{}" must have a {} min length',
