@@ -24,7 +24,7 @@ user = {
 }
 ```
 
-First, you need to import the Validator and Validations classes from pylidator. The Validator class is responsible for the validation, and Validations contains the possible validations.
+First, you need to import the `Validator` and `Validations` classes from pylidator. The `Validator` class is responsible for the validation, and `Validations` contains the possible validations.
 
 ```python
 from pylidator import Validator, Validations
@@ -43,7 +43,7 @@ rules = {
 }
 ```
 
-Now, you can pass the dictionary with the data and the dictionary with the rules to the Validator class.
+Now, you can pass the dictionary with the data and the dictionary with the rules to the `Validator` class.
 
 ```python
 from pylidator import Validator, Validations
@@ -66,7 +66,7 @@ rules = {
 validation = Validator(user, rules)
 ```
 
-To check if the data is valid or invalid, you can check the has_errors attribute of the Validator instance. The has_errors is a boolean attribute that returns True if data is invalid and False otherwise.
+To check if the data is valid or invalid, you can check the `has_errors` attribute of the `Validator` instance. The `has_errors` is a boolean attribute that returns `True` if data is invalid and `False` otherwise.
 
 ```python
 from pylidator import Validator, Validations
@@ -90,7 +90,7 @@ validation = Validator(user, rules)
 print(validation.has_errors)  # False
 ```
 
-To get the data from the Validator instance, you can use the ```data``` attribute.
+To get the data from the `Validator` instance, you can use the `data` attribute.
 
 ```python
 from pylidator import Validator, Validations
