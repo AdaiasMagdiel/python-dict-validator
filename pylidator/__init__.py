@@ -2,8 +2,13 @@ from typing import Any
 
 
 class Validations:
-    REQUIRED = 'required'
+    ALPHA = 'alpha'
     EMAIL = 'email'
+    REQUIRED = 'required'
+
+    @classmethod
+    def MAX(cls, value: int):
+        return f'max:{value}'
 
     @classmethod
     def MIN(cls, value: int):
@@ -24,8 +29,23 @@ class Rules:
 
         self.data = data
 
-    def required(self, key: str, value: str):
-        return key in self.data
+    def alpha(self, key: str, value: str):
+        item = self.data.get(key)
+        return item and item.isalpha()
+
+    def email(self, key: str, value: str):
+        item = self.data.get(key)
+        return item and '@' in item and '.' in item.split('@')[-1]
+
+    def max(self, key: str, value: str):
+        if not value.isdigit():
+            raise Exception(
+                'Max validation requires a number to verify.' +
+                f' But has received "{value}" instead'
+            )
+
+        item = self.data.get(key)
+        return item and len(item) <= int(value)
 
     def min(self, key: str, value: str):
         if not value.isdigit():
@@ -37,11 +57,8 @@ class Rules:
         item = self.data.get(key)
         return item and len(item) >= int(value)
 
-    def email(self, key: str, value: str):
-        cond_1 = '@' in self.data[key]
-
-        item = self.data.get(key)
-        return item and '@' in item and '.' in item.split('@')[-1]
+    def required(self, key: str, value: str):
+        return key in self.data
 
     @classmethod
     def _total_rules(cls):
@@ -50,42 +67,31 @@ class Rules:
 
 
 class Messages:
+    messages = {
+        'alpha': 'The "{}" must have only alphabetic characters',
+        'email': 'The "{}" must be a valid email',
+        'max': 'The "{}" must have a {} max length',
+        'min': 'The "{}" must have a {} min length',
+        'required': 'The "{}" is required',
+    }
+
     def __init__(self) -> None:
-        if Validations._total_rules() != self._total_rules():
+        if Validations._total_rules() != len(self.messages):
             raise Exception(
-                'Theres rules in Validations that are not implemented in Rules class'
+                'Theres rules in Validations that are not messages\n.' +
+                f'Validations: {Validations._total_rules()} - ' +
+                f'Messages: {len(self.messages)}'
             )
-
-        self.messages = {
-            'required': 'The "{}" is required',
-            'min': 'The "{}" must have a {} min length',
-            'email': 'The "{}" must be a valid email',
-        }
-
-    def required(self, key: str, value: str):
-        return self.messages['required'].format(key)
-
-    def min(self, key: str, value: str):
-        return self.messages['min'].format(key, value)
-
-    def email(self, key: str, value: str):
-        return self.messages['email'].format(key, value)
-
-    @classmethod
-    def _total_rules(cls):
-        items = [key for key in cls.__dict__.keys() if not key.startswith('_')]
-        return len(items)
 
 
 class Validator:
-    errors: dict = {}
-
     def __init__(
         self, data: dict[str, Any], rules: dict[str, list[str]]
     ) -> None:
-        self.rules_class = Rules(data)
+        self.errors = {}
+        self.rules_class = Rules(data.copy())
         self.messages = Messages()
-        self.verify(rules)
+        self.verify(rules.copy())
 
     def verify(self, rules: dict[str, list[str]]):
         for field, _rules in rules.items():
@@ -98,12 +104,12 @@ class Validator:
         rule_attr = getattr(self.rules_class, rule.lower())
         res = rule_attr(field, value)
         if res is False:
-            message = getattr(self.messages, rule.lower())
+            message = self.messages.messages.get(rule.lower(), '')
 
             if field not in self.errors:
                 self.errors[field] = []
 
-            self.errors[field].append(message(field, value))
+            self.errors[field].append(message.format(field, value))
 
     @property
     def data(self) -> dict:
