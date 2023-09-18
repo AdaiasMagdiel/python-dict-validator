@@ -122,7 +122,11 @@ These are the current validations rules that you can use.
 
 | Rules | Parameter | Description |
 | --- | --- | --- |
+| Alpha | No | Check if the value contains only alphabetic characters. |
+| Alpha numeric | No | Check if the value contains only alphanumeric characters. |
+| Alpha numeric punct | No | Value must contains only alphanumeric, or this characters: ~, !, #, $, %, &, *, -, _, +, =, |, :, . |
 | Email | No | Check if the value of a field is a valid email. |
+| Max | Yes | Verify if the value length is shorter than the parameter value. |
 | Min | Yes | Verify if the value length is longer than the parameter value. |
 | Required | No | A generic rule that validates if the field is present in the dictionary. |
 
@@ -145,6 +149,10 @@ To see how to use, check the [usage](#usage).
 
 ### Validations:
 
+- `ALPHA` (attribute): Check if field value contains only alphabetic characters.
+- `ALPHA_NUMERIC` (attribute): Check if field value contains only alphanumeric characters.
+- `ALPHA_NUMERIC_PUNCT` (attribute): Value must contains only alphanumeric, or this characters: ~, !, #, $, %, &, *, -, _, +, =, |, :, .
 - `EMAIL` (attribute): Used to verify if field value are a valid email.
 - `REQUIRED` (attribute): Indicates that the fields are required in the data; it is a generic rule that all the other rules use for the verification itself.
+- `MAX(value: int)`: Fails if field is shorter than the parameter value.
 - `MIN(value: int)`: Requires a length of at least the specified value.
