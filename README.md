@@ -6,6 +6,7 @@ A simple dict validator for python projects based in [CodeIgniter's Validator](h
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Documentation](#documentation)
 
 ## Installation
 
@@ -115,10 +116,35 @@ print(validation.has_errors)  # False
 print(validation.data == user) # True
 ```
 
-### The currents validations from Validations classe are:
+### Validations Rules:
+
+These are the current validations rules that you can use.
 
 | Rules | Parameter | Description |
 | --- | --- | --- |
 | Email | No | Check if the value of a field is a valid email. |
 | Min | Yes | Verify if the value length is longer than the parameter value. |
 | Required | No | A generic rule that validates if the field is present in the dictionary. |
+
+## Documentation
+
+- [Validator](#validator)
+- [Validations](#validations)
+
+### Validator
+
+The `Validator` class is responsible for data validation based on specific rules.
+
+- `has_errors` (attribute): A boolean that indicates whether there are errors in the validated data. If there are no errors, this attribute will be `False`.
+- `data` (attribute): A dictionary containing the unchanged data to be validated.
+- `__init__(data: dict[str, Any], rules: dict[str, list[str]])` (method): The constructor of the class that initializes the `Validator` instance. It takes two arguments:
+  - `data` (type: dict[str, Any]): The dictionary containing the data to be validated.
+  - `rules` (type: dict[str, list[str]]): The dictionary containing the fields of data and a list of validation rules to be applied to the data.
+
+To see how to use, check the [usage](#usage).
+
+### Validations:
+
+- `EMAIL` (attribute): Used to verify if field value are a valid email.
+- `REQUIRED` (attribute): Indicates that the fields are required in the data; it is a generic rule that all the other rules use for the verification itself.
+- `MIN(value: int)`: Requires a length of at least the specified value.
