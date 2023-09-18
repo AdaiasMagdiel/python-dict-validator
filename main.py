@@ -1,16 +1,27 @@
 from pylidator import Validator, Validations
 
-data = {'name': 'John Doe', 'email': 'invalid email.com', 'password': 'error'}
+user_01 = {
+    'name': 'John Doe',
+    'username': 'jhon.doe',
+    'email': 'jhon.doe@email.com',
+    'password': 'notsegurepassword'
+}
+user_02 = {
+    'name': 'Link',
+    'username': 'hyruleshero',
+    'email': 'not valid email',
+    'password': '123'
+}
 
 rules = {
     'name': [Validations.MIN(6)],
+    'username': [Validations.MIN(3)],
     'email': [Validations.EMAIL],
     'password': [Validations.MIN(6)],
 }
 
-validation = Validator(data, rules)
-if validation.has_errors:
-    print('errors:')
-    print(validation.errors)
-else:
-    print(validation.data)
+validation = Validator(user_01, rules)
+print(validation.has_errors)  # False
+
+validation = Validator(user_02, rules)
+print(validation.has_errors)  # True
